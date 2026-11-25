@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Milan · Live room</title>
+  <link rel="stylesheet" href="/static/styles.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E%F0%9F%AA%94%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+  <div class="toran"></div>
+  <main class="wrap">
+    <div class="row" style="justify-content:space-between">
+      <h1 style="font-size:2rem">मिलन <span>Milan</span></h1>
+      <div class="row">
+        <span id="status" class="pill">connecting…</span>
+        <span id="langs" class="pill" title="Languages live in this room">—</span>
+        <button id="helpBtn" class="ghost icon" aria-label="Show the walkthrough again" title="How to use Milan">?</button>
+      </div>
+    </div>
+    <p class="muted">Room <b id="roomName"></b></p>
+
+    <details class="card share" id="sharePanel">
+      <summary>📱 Invite guests: scan the QR or copy the link</summary>
+      <div class="share-body">
+        <div id="roomQr" class="qrbox" role="img" aria-label="QR code to join this room"></div>
+        <div>
+          <p class="muted">Guests scan this, pick their language, and they're in.</p>
+          <span id="roomUrl" class="url"></span>
+          <button id="copyBtn" class="ghost">📋 Copy link</button>
+        </div>
+      </div>
+    </details>
+
+    <div id="rush" class="banner">⚡ Rush mode is on: lots of guests right now, so Milan is sending captions only to keep everyone in sync.</div>
+
+    <section class="card controls">
+      <div class="grid">
+        <div>
+          <label for="name">Your name</label>
+          <input id="name" maxlength="40" placeholder="Paati / Nani / Arjun">
+        </div>
+        <div>
+          <label for="lang">I want to hear</label>
+          <select id="lang"></select>
+        </div>
+        <div>
+          <label>&nbsp;</label>
+          <div class="row">
+            <label class="row" style="margin:0"><input type="checkbox" id="elder" style="width:auto"> Large text</label>
+            <button id="voiceBtn" class="ghost">🔈 Enable voice</button>
+            <button id="projBtn" class="ghost">📽 Projector</button>
+            <a id="stageLink" class="pill" target="_blank" rel="noopener">🎭 Stage view (all languages)</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div id="feed"><div class="empty" id="empty"><span class="diya" aria-hidden="true">🪔</span><b>Waiting for someone to speak…</b><span>Hold 🎙 or type below. Invite family with the QR above.</span></div></div>
+  </main>
+
+  <div class="dock">
+    <div class="inner">
+      <button id="talk" title="Hold to speak (or tap to start/stop)" aria-label="Hold to speak, or tap to start and stop">🎙</button>
+      <input id="text" placeholder="…or type a message in any language" maxlength="1000">
+      <button id="send">Send</button>
+    </div>
+  </div>
+  <div id="tour" class="tour-layer" hidden></div>
+  <div id="tourBox" class="tour-box" role="dialog" aria-modal="true" aria-labelledby="tourText" hidden>
+    <p class="count" id="tourCount"></p>
+    <h2 id="tourText"></h2>
+    <div class="row">
+      <div class="tour-dots" id="tourDots" aria-hidden="true"><i></i><i></i><i></i></div>
+      <div class="row">
+        <button id="tourSkip" class="ghost">Skip</button>
+        <button id="tourNext">Next</button>
+      </div>
+    </div>
+  </div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="/static/room.js" type="module"></script>
+</body>
+</html>

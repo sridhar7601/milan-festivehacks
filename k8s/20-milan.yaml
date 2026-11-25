@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: milan
+  namespace: milan
+  labels: {app: milan}
+spec:
+  replicas: 1          # NudgeBee scales this (approval-gated) during a rush
+  revisionHistoryLimit: 3
+  selector: {matchLabels: {app: milan}}
+  strategy:
+    rollingUpdate: {maxUnavailable: 0, maxSurge: 1}
+  template:
+    metadata:
+      labels: {app: milan}
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8000"
+        prometheus.io/path: /metrics
+    spec:
+      terminationGracePeriodSeconds: 20
+      containers:
+        - name: milan
+          image: milan:dev
+          imagePullPolicy: IfNotPresent
+          ports: [{name: http, containerPort: 8000}]
+          env:
+            - {name: REDIS_URL, value: "redis://redis:6379/0"}
+            - {name: SARVAM_MAX_CONCURRENCY, value: "8"}
+          envFrom:
+            - secretRef: {name: milan-secrets}
+          resources:
+            requests: {cpu: 100m, memory: 128Mi}
+            limits: {cpu: 500m, memory: 256Mi}
+          readinessProbe:
+            httpGet: {path: /readyz, port: http}
+            periodSeconds: 5
+          livenessProbe:
+            httpGet: {path: /healthz, port: http}
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          securityContext:
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: milan
+  namespace: milan
+  labels: {app: milan}
+spec:
+  type: NodePort
+  selector: {app: milan}
+  ports:
+    - {name: http, port: 80, targetPort: http, nodePort: 30080}

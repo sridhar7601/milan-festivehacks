@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Milan · Every family speaks, every family understands</title>
+  <link rel="stylesheet" href="/static/styles.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E%F0%9F%AA%94%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+  <div class="toran"></div>
+  <main class="wrap">
+    <header class="hero">
+      <div>
+        <span class="eyebrow">🪔 Festive Hacks 2026 · live translation</span>
+        <h1>मिलन <span>Milan</span></h1>
+        <p class="pitch">At every wedding and Diwali call, <b>everyone hears every word in their own language</b>, live, in voice and captions.</p>
+        <div class="row">
+          <a class="btn" href="/r/demo-room">✨ Try a demo room</a>
+          <a class="btn ghost" href="#start">Start your own event</a>
+        </div>
+      </div>
+      <div class="card preview" role="img" aria-label="Example: one English sentence shown as live captions in Hindi, Tamil, Bengali, Punjabi, Telugu and Malayalam">
+        <div aria-hidden="true">
+          <p class="src">🎙 Arjun says: “Welcome to the sangeet, everyone!”</p>
+          <div class="bubble">
+            <span class="ltag" id="pvTag">EN → HI</span>
+            <div class="say" id="pvSay">सभी को संगीत में स्वागत है!</div>
+          </div>
+          <div class="langs" id="pvLangs"></div>
+        </div>
+      </div>
+    </header>
+
+    <h2 class="section-title" id="how">How it works</h2>
+    <ol class="steps" aria-labelledby="how">
+      <li><span class="ico" aria-hidden="true">🎙</span><b>Speak</b><span>Talk or type in any language, Hinglish and code-mix too.</span></li>
+      <li><span class="ico" aria-hidden="true">🔁</span><b>Sarvam translates</b><span>Sarvam AI transcribes and translates into each guest's language.</span></li>
+      <li><span class="ico" aria-hidden="true">🔊</span><b>Everyone hears</b><span>Every guest gets captions and a natural voice in their own language.</span></li>
+    </ol>
+
+    <h2 class="section-title" id="start">Get started</h2>
+    <div class="grid">
+      <section class="card" aria-labelledby="startTitle">
+        <h2 id="startTitle">Start an event</h2>
+        <label for="event">Event name</label>
+        <input id="event" placeholder="Priya weds Arjun - Sangeet" maxlength="60">
+        <div class="row" style="margin-top:14px"><button id="create">Create room</button></div>
+        <div id="share" hidden style="margin-top:16px">
+          <p class="muted">Guests scan to join and pick their language:</p>
+          <div id="qr" role="img" aria-label="QR code to join the room"></div>
+          <p><a id="link" href="#"></a></p>
+        </div>
+      </section>
+      <section class="card" aria-labelledby="joinTitle">
+        <h2 id="joinTitle">Join an event</h2>
+        <label for="code">Room code</label>
+        <input id="code" placeholder="priya-weds-arjun-sangeet">
+        <div class="row" style="margin-top:14px"><button id="join" class="ghost">Join</button></div>
+        <p class="muted" style="margin-top:18px">Got a QR code? Just scan it with your phone camera.</p>
+      </section>
+    </div>
+
+    <p class="powered">Powered by <b>Sarvam AI</b> · <b>Flagsmith</b> · <b>NudgeBee</b></p>
+  </main>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script>
+    const slug = (s) => s.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 32);
+    document.getElementById("create").onclick = () => {
+      const base = slug(document.getElementById("event").value) || "milan";
+      const room = `${base}-${Math.random().toString(36).slice(2, 6)}`.replace(/^-/, "");
+      const url = `${location.origin}/r/${room}`;
+      const share = document.getElementById("share");
+      share.hidden = false;
+      const link = document.getElementById("link");
+      link.href = url; link.textContent = url;
+      const qr = document.getElementById("qr"); qr.innerHTML = "";
+      if (window.QRCode) new QRCode(qr, { text: url, width: 180, height: 180 });
+      link.focus();
+    };
+    document.getElementById("join").onclick = () => {
+      const room = slug(document.getElementById("code").value);
+      if (room.length >= 3) location.href = `/r/${room}`;
+    };
+    // hero preview: real Sarvam AI output for one sentence, cycling through languages
+    const PV = [
+      ["HI", "हिन्दी", "सभी को संगीत में स्वागत है!"],
+      ["TA", "தமிழ்", "அனைவரையும் இசைக் கச்சேரிக்கு வரவேற்கிறேன்!"],
+      ["BN", "বাংলা", "সবাইকে সংগীত কক্ষে স্বাগত জানাই!"],
+      ["PA", "ਪੰਜਾਬੀ", "ਸਭ ਨੂੰ ਸੰਗੀਤ ਵਿੱਚ ਸੁਆਗਤ ਹੈ!"],
+      ["TE", "తెలుగు", "అందరూ సంగీతానికి స్వాగతం!"],
+      ["ML", "മലയാളം", "എല്ലാവരെയും സംഗീതത്തിലേക്ക് സ്വാഗതം ചെയ്യുന്നു!"],
+    ];
+    const pvLangs = document.getElementById("pvLangs"), pvSay = document.getElementById("pvSay"), pvTag = document.getElementById("pvTag");
+    PV.forEach(([, name]) => { const s = document.createElement("span"); s.textContent = name; pvLangs.append(s); });
+    let pv = 0;
+    const showPv = () => {
+      [...pvLangs.children].forEach((c, i) => c.classList.toggle("on", i === pv));
+      pvTag.textContent = `EN → ${PV[pv][0]}`; pvSay.textContent = PV[pv][2]; pvSay.classList.remove("out");
+    };
+    showPv();
+    if (!matchMedia("(prefers-reduced-motion: reduce)").matches) setInterval(() => {
+      pvSay.classList.add("out");
+      setTimeout(() => { pv = (pv + 1) % PV.length; showPv(); }, 350);
+    }, 2600);
+    document.getElementById("event").addEventListener("keydown", (e) => { if (e.key === "Enter") document.getElementById("create").click(); });
+    document.getElementById("code").addEventListener("keydown", (e) => { if (e.key === "Enter") document.getElementById("join").click(); });
+  </script>
+</body>
+</html>
