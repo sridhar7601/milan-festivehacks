@@ -5,7 +5,7 @@
 ## Demo
 
 * **Video (under 2 min):** see the link in the submission
-* **Live demo:** [[https://easier-statements-replaced-upgrades.trycloudflare.com](https://easier-statements-replaced-upgrades.trycloudflare.com)](https://kilometers-pavilion-jar-retrieved.trycloudflare.com) (temporary tunnel to the team's Kubernetes cluster; it's live only during judging)
+* **Live demo:** [(https://kilometers-pavilion-jar-retrieved.trycloudflare.com) (temporary tunnel to the team's Kubernetes cluster; it's live only during judging)
 
 | Landing | Three guests, three languages | Stage view |
 |---|---|---|
